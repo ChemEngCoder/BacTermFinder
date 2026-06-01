@@ -30,7 +30,7 @@ google_auth_oauthlib==0.4.6
 greenlet==2.0.1
 grpcio==1.47.0
 h5py==3.7.0
-# hdmedians==0.14.2
+hdmedians==0.14.2
 idna==3.4
 importlib-metadata==6.0.0
 importlib_resources==5.12.0
