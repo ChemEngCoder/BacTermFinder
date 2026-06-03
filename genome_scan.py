@@ -181,7 +181,7 @@ def read_csv_low(file, data_path, input_dim):
 
     return x, sample_names
 
-def create_result_df(df, min_score):
+def create_result_df(df, output_cols, min_score):
     # Remove _ for string splitting
     df['SampleName'] = df['SampleName'].str.replace('NC_0', 'NC0')
     # String splitting
@@ -197,7 +197,7 @@ def create_result_df(df, min_score):
     df['name'] = 'bactermfinder'
     df['score'] = df['probability_mean']
     # Sorting columns for a bedfile
-    df_result = df[['chrom', 'start', 'end', 'name', 'score', 'strand']]
+    df_result = df[output_cols]
     # Filtering based on the threhsold
     df_result = df_result[df_result['score']>min_score]
 
@@ -230,6 +230,7 @@ if __name__ == '__main__':
     #output_dir = sys.argv[3]  # output file name
     #batch_size = int(sys.argv[4])  # batch size for iLearnPlus feature generation
     WINDOW_SIZE = 101  # window size for sliding windows, fixed to 101
+    OUTPUT_COLS = ['chrom', 'start', 'end', 'name', 'score', 'strand']
     ############################################ Paths & Filenames ########################################################
     SAMPLE_FASTA = "df_sample.fasta"
     OUTPUT_SAMPLE = 'output_sample'
@@ -362,9 +363,9 @@ if __name__ == '__main__':
     df['probability_mean'] = df[ [col for col in df.columns if 'probability' in col] ].mean(axis=1)
     mean_filename = genome_filename + '_mean.csv'
     df.to_csv(os.path.join(output_dir, mean_filename), index=False)
-    result_df = create_result_df(df, min_score)
+    result_df = create_result_df(df, OUTPUT_COLS, min_score)
     result_filename = genome_filename + '_result.csv'
-    df.to_csv(os.path.join(output_dir, result_filename), index=False)
+    result_df.to_csv(os.path.join(output_dir, result_filename), index=False)
     
     ############################################ timing and done ########################################################
     endtime = time.time()
