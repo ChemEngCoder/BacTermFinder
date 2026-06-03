@@ -205,7 +205,7 @@ if __name__ == '__main__':
         os.remove('Sample.csv')
     df_slide = extract_sliding_windows(genome_file, WINDOW_SIZE, step_size)
     sliding_windows_filename = f'_{genome_filename}_sliding_windows.csv'
-    df_slide.to_csv(os.join(output_dir, sliding_windows_filename),
+    df_slide.to_csv(os.path.join(output_dir, sliding_windows_filename),
                     index=False)
     print("\nSliding windows generated")
     ############################################  iLearnPlus ########################################################
@@ -214,11 +214,11 @@ if __name__ == '__main__':
     print("\n")
     print("iLearnPlus biological feature generation started")
     # convert the dataframe to fasta format
-    sample_fasta_path = os.join(output_dir, SAMPLE_FASTA)
+    sample_fasta_path = os.path.join(output_dir, SAMPLE_FASTA)
     df_to_fasta(df_slide.reset_index(drop=True), sample_fasta_path, "training")
 
     # remove output folder if it exists
-    output_sample_dir = os.join(output_dir, OUTPUT_SAMPLE)
+    output_sample_dir = os.path.join(output_dir, OUTPUT_SAMPLE)
     if os.path.exists(output_sample_dir):
         shutil.rmtree(output_sample_dir)
 
@@ -256,7 +256,7 @@ if __name__ == '__main__':
     }
     
 
-    data_path = os.join(output_dir, 'output_sample/')
+    data_path = os.path.join(output_dir, 'output_sample/')
     print('\nLoading data')
     # files = os.listdir(data_path)
     for embedding in input_dim_dict.keys():
@@ -294,7 +294,7 @@ if __name__ == '__main__':
         # write the results
         out_embed.drop(columns=['index', 0], inplace=True)
         embed_filename = '_' + str(embedding_wo_csv) + genome_filename + '.csv'
-        out_embed.to_csv(os.join(output_dir, embed_filename), index=False)
+        out_embed.to_csv(os.path.join(output_dir, embed_filename), index=False)
 
         del out_embed
         del model
@@ -308,19 +308,19 @@ if __name__ == '__main__':
     
     # read the first file
     embed_filename = '_' + str(embedding_wo_csv) + genome_filename + '.csv'
-    df = pd.read_csv(os.join(output_dir, embed_filename))
+    df = pd.read_csv(os.path.join(output_dir, embed_filename))
     # read the rest of the files
     for embedding in input_dim_dict.keys():
         if embedding != 'binary.csv':
             embedding_wo_csv = embedding.split('.csv')[0]
             embed_filename = '_' + embedding_wo_csv + genome_filename +  '.csv'
-            df1 = pd.read_csv(os.join(output_dir, embed_filename))
+            df1 = pd.read_csv(os.path.join(output_dir, embed_filename))
             df[f'probability_{embedding_wo_csv}'] = df1[f'probability_{embedding_wo_csv}']
             del df1
     # write the results
     df['probability_mean'] = df[ [col for col in df.columns if 'probability' in col] ].mean(axis=1)
     mean_filename = genome_filename + '_mean.csv'
-    df.to_csv(os.join(output_dir, mean_filename), index=False)
+    df.to_csv(os.path.join(output_dir, mean_filename), index=False)
 
     
     ############################################ timing and done ########################################################
