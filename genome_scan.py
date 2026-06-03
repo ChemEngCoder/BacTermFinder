@@ -181,7 +181,7 @@ def read_csv_low(file, data_path, input_dim):
 
     return x, sample_names
 
-def create_output_df(df, min_score):
+def create_result_df(df, min_score):
     # Remove _ for string splitting
     df['SampleName'] = df['SampleName'].str.replace('NC_0', 'NC0')
     # String splitting
@@ -197,9 +197,9 @@ def create_output_df(df, min_score):
     df['name'] = 'bactermfinder'
     df['score'] = df['probability_mean']
     # Sorting columns for a bedfile
-    df = df[['chrom', 'start', 'end', 'name', 'score', 'strand']]
+    df_result = df[['chrom', 'start', 'end', 'name', 'score', 'strand']]
     # Filtering based on the threhsold
-    df_result = df[df['score']>min_score]
+    df_result = df_result[df_result['score']>min_score]
 
     return df_result
 
@@ -362,7 +362,7 @@ if __name__ == '__main__':
     df['probability_mean'] = df[ [col for col in df.columns if 'probability' in col] ].mean(axis=1)
     mean_filename = genome_filename + '_mean.csv'
     df.to_csv(os.path.join(output_dir, mean_filename), index=False)
-    result_df = create_output_df(df, min_score)
+    result_df = create_result_df(df, min_score)
     result_filename = genome_filename + '_result.csv'
     df.to_csv(os.path.join(output_dir, result_filename), index=False)
     
