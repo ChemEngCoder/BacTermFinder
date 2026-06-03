@@ -214,8 +214,8 @@ if __name__ == '__main__':
     parser.add_argument("-o"  , "--output-dir", help='Output folder.', type=str)
     parser.add_argument("-r"  , "--repo-dir"  , help='Repo folder.', type=str)
     parser.add_argument("-ss", "--step-size"  , help='Sliding window step size. Default is 3.', type=int, default=3)
-    parser.add_argument("-bs", "--batch-size" , help='Batch size for iLearnPlus feature generation.', type=int, default=3)
-    parser.add_argument("-ms", "--min-score" , help='Minimum score for retention.', type=int, default=0.3)
+    parser.add_argument("-bs", "--batch-size" , help='Batch size for iLearnPlus feature generation.', type=int, default=10000)
+    parser.add_argument("-ms", "--min-score" , help='Minimum score for retention.', type=float, default=0.3)
     
     args = parser.parse_args()
     genome_file = args.fasta
