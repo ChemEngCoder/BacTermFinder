@@ -278,7 +278,8 @@ if __name__ == '__main__':
     for embedding in input_dim_dict.keys():
         # load deep learning model
         print(f"\nLoading Deep Learning Model {embedding} \n")
-        model = load_model(f'deep-bactermfinder_3cnn_1d_1cat_reduced_10x_{embedding}_saved_model.h5')
+        model_filename = f'deep-bactermfinder_3cnn_1d_1cat_reduced_10x_{embedding}_saved_model.h5'
+        model = load_model(os.path.join(repo_dir, model_filename))
 
         embedding_wo_csv = embedding.split('.csv')[0]
         out_embed = pd.DataFrame(columns=['SampleName', f'probability_{embedding_wo_csv}'])
