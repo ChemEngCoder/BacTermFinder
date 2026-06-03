@@ -18,6 +18,7 @@ from Bio.Seq import Seq
 from keras.models import load_model
 from tqdm import tqdm
 import shutil
+import argparse
 
 
 def extract_sliding_windows(ref_genome_file: str, window_size: int,
@@ -187,19 +188,34 @@ if __name__ == '__main__':
 
     ############################################ Sys inputs ########################################################
     # get the parameters from the command line
-    genome_file = sys.argv[1]  # genome file name fasta format
-    step_size = int(sys.argv[2])  # step size for sliding window ( aka stride size )
-    output_dir = sys.argv[3]  # output file name
-    batch_size = int(sys.argv[4])  # batch size for iLearnPlus feature generation
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f"  , "--fasta"     , help="FASTA sequences file.", type=str)
+    parser.add_argument("-o"  , "--output-dir", help='Output folder.', type=str)
+    parser.add_argument("-r"  , "--repo-dir"  , help='Repo folder.', type=str)
+    parser.add_argument("-ss", "--step-size"  , help='Sliding window step size. Default is 3.', type=int, default=3)
+    parser.add_argument("-bs", "--batch-size" , help='Batch size for iLearnPlus feature generation.', type=int, default=3)
+    args = parser.parse_args()
+    genome_file = args.fasta
+    output_dir = args.output_dir
+    repo_dir = args.repo_dir
+    step_size = args.step_size
+    batch_size = args.batch_size
+
+    #genome_file = sys.argv[1]  # genome file name fasta format
+    #step_size = int(sys.argv[2])  # step size for sliding window ( aka stride size )
+    #output_dir = sys.argv[3]  # output file name
+    #batch_size = int(sys.argv[4])  # batch size for iLearnPlus feature generation
     WINDOW_SIZE = 101  # window size for sliding windows, fixed to 101
+    ############################################ Paths & Filenames ########################################################
     SAMPLE_FASTA = "df_sample.fasta"
     OUTPUT_SAMPLE = 'output_sample'
+    ilearnplus_file = "iLearnPlus/util/FileProcessing.py"
+    genome_filename = os.path.basename(genome_file)
+    ilearnplus_path = os.path.join(repo_dir, ilearnplus_file)
     ############################################ sliding window generation ##########################################
     # get the sequences
     print("\n")
     print("Sliding windows generation started\n")
-    # Extract genome filename for building output paths
-    genome_filename = os.path.basename(genome_file)
     
     if os.path.exists('Sample.csv'):
         os.remove('Sample.csv')
@@ -226,7 +242,7 @@ if __name__ == '__main__':
     #     os.remove('output_sample_merged')
 
     # generate features
-    os.system('python iLearnPlus/util/FileProcessing.py ' +
+    os.system(f'python {ilearnplus_path} ' +
               sample_fasta_path + ' ' + str(batch_size) + ' ' + '16' + ' ' +
               output_sample_dir)
 
