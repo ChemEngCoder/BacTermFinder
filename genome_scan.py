@@ -181,6 +181,27 @@ def read_csv_low(file, data_path, input_dim):
 
     return x, sample_names
 
+def create_output_df(df, min_score):
+    # Remove _ for string splitting
+    df['SampleName'] = df['SampleName'].str.replace('NC_0', 'NC0')
+    # String splitting
+    split_names = df['SampleName'].str.split('_', expand=True)
+    # Create start and end indices
+    df['start'] =split_names[2].astype(int)
+    df['end'] = split_names[3].astype(int)
+    # Define Strand and sample name
+    df['strand'] = split_names[4]
+    df['chrom'] = split_names[1]
+    # Add metadata
+    df['chrom'] = df['chrom'].str.replace('NC0', 'NC_0')
+    df['name'] = 'bactermfinder'
+    df['score'] = df['probability_mean']
+    # Sorting columns for a bedfile
+    df = df[['chrom', 'start', 'end', 'name', 'score', 'strand']]
+    # Filtering based on the threhsold
+    df_result = df[df['score']>min_score]
+
+    return df_result
 
 if __name__ == '__main__':
     # time it
@@ -194,12 +215,15 @@ if __name__ == '__main__':
     parser.add_argument("-r"  , "--repo-dir"  , help='Repo folder.', type=str)
     parser.add_argument("-ss", "--step-size"  , help='Sliding window step size. Default is 3.', type=int, default=3)
     parser.add_argument("-bs", "--batch-size" , help='Batch size for iLearnPlus feature generation.', type=int, default=3)
+    parser.add_argument("-ms", "--min-score" , help='Minimum score for retention.', type=int, default=0.3)
+    
     args = parser.parse_args()
     genome_file = args.fasta
     output_dir = args.output_dir
     repo_dir = args.repo_dir
     step_size = args.step_size
     batch_size = args.batch_size
+    min_score = args.min_score
 
     #genome_file = sys.argv[1]  # genome file name fasta format
     #step_size = int(sys.argv[2])  # step size for sliding window ( aka stride size )
@@ -338,7 +362,9 @@ if __name__ == '__main__':
     df['probability_mean'] = df[ [col for col in df.columns if 'probability' in col] ].mean(axis=1)
     mean_filename = genome_filename + '_mean.csv'
     df.to_csv(os.path.join(output_dir, mean_filename), index=False)
-
+    result_df = create_output_df(df, min_score)
+    result_filename = genome_filename + '_result.csv'
+    df.to_csv(os.path.join(output_dir, result_filename), index=False)
     
     ############################################ timing and done ########################################################
     endtime = time.time()
