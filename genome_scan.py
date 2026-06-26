@@ -186,12 +186,15 @@ def create_result_df(df, output_cols, min_score):
     df['SampleName'] = df['SampleName'].str.replace('NC_0', 'NC0')
     # String splitting
     split_names = df['SampleName'].str.split('_', expand=True)
+    # len(split_names) with no _ in 'chrom" is 5. 
+    # 'chrom' is contained in indices 1:len(split_names)-4
+
     # Create start and end indices
-    df['start'] =split_names[2].astype(int)
-    df['end'] = split_names[3].astype(int)
+    df['start'] =split_names[-3].astype(int)
+    df['end'] = split_names[-2].astype(int)
     # Define Strand and sample name
-    df['strand'] = split_names[4]
-    df['chrom'] = split_names[1]
+    df['strand'] = split_names[-1]
+    df['chrom'] = split_names.iloc[:, 1:-3].fillna('').astype(str).agg('_'.join, axis=1).str.rstrip('_')
     # Add metadata
     df['chrom'] = df['chrom'].str.replace('NC0', 'NC_0')
     df['name'] = 'bactermfinder'
