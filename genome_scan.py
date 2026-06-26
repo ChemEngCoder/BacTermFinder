@@ -192,7 +192,7 @@ def create_result_df(df, output_cols, min_score):
     print(len(split_names))
     idx_3 = list([-3])
     # Create start and end indices
-    df['start'] =split_names[idx_3].astype(int)
+    df['start'] =split_names.iloc[:, -3].astype(int)
     df['end'] = split_names[-2].astype(int)
     # Define Strand and sample name
     df['strand'] = split_names[-1]
