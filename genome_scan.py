@@ -370,6 +370,9 @@ if __name__ == '__main__':
     df.to_csv(os.path.join(output_dir, mean_filename), index=False)
     result_df = create_result_df(df, OUTPUT_COLS, min_score)
     result_filename = genome_filename + '_result.csv'
+    print("RESULT FILENAME GENOME SCAN")
+    print(result_filename)
+    print(str(os.path.join(output_dir, result_filename)))
     result_df.to_csv(os.path.join(output_dir, result_filename), index=False)
     
     ############################################ timing and done ########################################################
