@@ -188,9 +188,11 @@ def create_result_df(df, output_cols, min_score):
     split_names = df['SampleName'].str.split('_', expand=True)
     # len(split_names) with no _ in 'chrom" is 5. 
     # 'chrom' is contained in indices 1:len(split_names)-4
-
+    print("Len split_names")
+    print(len(split_names))
+    idx_3 = list(-1)
     # Create start and end indices
-    df['start'] =split_names[-3].astype(int)
+    df['start'] =split_names[idx_3].astype(int)
     df['end'] = split_names[-2].astype(int)
     # Define Strand and sample name
     df['strand'] = split_names[-1]
