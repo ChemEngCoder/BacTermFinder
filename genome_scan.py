@@ -190,12 +190,12 @@ def create_result_df(df, output_cols, min_score):
     # 'chrom' is contained in indices 1:len(split_names)-4
     print("Len split_names")
     print(len(split_names))
-    idx_3 = list([-3])
+
     # Create start and end indices
     df['start'] =split_names.iloc[:, -3].astype(int)
-    df['end'] = split_names[-2].astype(int)
+    df['end'] = split_names.iloc[:, -2].astype(int)
     # Define Strand and sample name
-    df['strand'] = split_names[-1]
+    df['strand'] = split_names.iloc[:, -1]
     df['chrom'] = split_names.iloc[:, 1:-3].fillna('').astype(str).agg('_'.join, axis=1).str.rstrip('_')
     # Add metadata
     df['chrom'] = df['chrom'].str.replace('NC0', 'NC_0')
