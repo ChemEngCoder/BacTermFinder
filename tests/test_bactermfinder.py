@@ -30,7 +30,8 @@ def test_script_execution(tmp_path):
     script_path = os.path.join(root_dir, "genome_scan.py")
     test_filename = "ref-genome-test.fasta"
     test_path = os.path.join(root_dir, test_filename)
-    tmp_dir = tmp_path / "output_results"  # Script will create this
+    tmp_dir = os.path.join(tmp_path, "output_results")  # Script will create this
+    os.mkdir(tmp_dir)
 
     # 2. Create paths for expected outputs
     temp_data_prefixes = ["_ENAC", "_NCP", "_PS2", "_binary"]
