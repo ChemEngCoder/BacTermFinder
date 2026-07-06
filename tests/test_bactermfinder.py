@@ -26,7 +26,7 @@ def test_script_execution(tmp_path):
     Tests the external script by passing paths and verifying the generated files.
     """
     # 1. Setup paths using the tmp_path fixture
-    root_dir = Path(__file__).parent
+    root_dir = Path(__file__).parent.parent
     script_path = os.path.join(root_dir, "genome_scan.py")
     test_filename = "ref-genome-test.fasta"
     test_path = os.path.join(root_dir, test_filename)
