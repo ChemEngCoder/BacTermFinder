@@ -71,7 +71,7 @@ def test_script_execution(tmp_path):
 
         # Validate contents of output files
         expected_filename = result_files[temp_prefix]
-        expected_path = os.path.join(tmp_dir, expected_filename)
+        expected_path = os.path.join(root_dir, expected_filename)
 
         validate_expected_output(expected_path, temp_file_path)
 
