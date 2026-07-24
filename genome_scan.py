@@ -442,7 +442,7 @@ def main():
     print("RESULT FILENAME GENOME SCAN")
     print(result_filename)
     print(str(os.path.join(output_dir, result_filename)))
-    result_df.to_csv(os.path.join(output_dir, result_filename), index=False)
+    write_df.to_csv(os.path.join(output_dir, result_filename), index=False)
 
     ############################################ timing and done ########################################################
     endtime = time.time()
