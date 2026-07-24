@@ -292,7 +292,7 @@ def main():
     # Load reference genome into memory
     ref_genome_dict = SeqIO.to_dict(SeqIO.parse(genome_file, "fasta"))
     write_df = pd.DataFrame(columns=OUTPUT_COLS)
-    for seq_id in genome_filename:
+    for seq_id in ref_genome_dict.keys():
 
         seq = ref_genome_dict[seq_id].seq
         df_slide = extract_windows_from_sequence(seq_id, seq, WINDOW_SIZE, step_size)
