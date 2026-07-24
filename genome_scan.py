@@ -72,7 +72,7 @@ def extract_sliding_windows(ref_genome_dict: dict, window_size: int,
     """
 
     # Define function to extract windows from a single sequence
-    def extract_windows_from_sequence(seq_id):
+    def _extract_windows_from_sequence(seq_id):
         seq = ref_genome_dict[seq_id].seq
         seq_len = len(seq)
         windows = []
@@ -247,7 +247,6 @@ def create_result_df_old(df, output_cols, min_score):
 
 def create_result_df(df, output_cols, min_score):
     # Remove _ for string splitting
-    df['SampleName'] = df['SampleName'].str.replace('NC_0', 'NC0')
     # String splitting
     print("Processing result df head")
     print(df.head)
@@ -258,7 +257,6 @@ def create_result_df(df, output_cols, min_score):
     # Define Strand and sample name
     df['chrom'] = df['seq_id']
     # Add metadata
-    df['chrom'] = df['chrom'].str.replace('NC0', 'NC_0')
     df['name'] = 'bactermfinder'
     df['score'] = df['probability_mean']
     # Sorting columns for a bedfile
