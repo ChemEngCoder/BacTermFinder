@@ -436,7 +436,7 @@ def main():
             mean_filename = genome_filename + '_mean.csv'
             df_slide.to_csv(os.path.join(output_dir, mean_filename), index=False)
             result_df = create_result_df(df_slide, OUTPUT_COLS, min_score)
-            pd.concat([write_df, result_df], columns=OUTPUT_COLS)
+            pd.concat([write_df, result_df])
 
     result_filename = genome_filename + '_result.csv'
     print("RESULT FILENAME GENOME SCAN")
