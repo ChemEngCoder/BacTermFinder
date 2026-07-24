@@ -436,7 +436,7 @@ def main():
             mean_filename = genome_filename + '_mean.csv'
             df_slide.to_csv(os.path.join(output_dir, mean_filename), index=False)
             result_df = create_result_df(df_slide, OUTPUT_COLS, min_score)
-            pd.concat([write_df, result_df])
+            write_df = pd.concat([write_df, result_df])
 
     result_filename = genome_filename + '_result.csv'
     print("RESULT FILENAME GENOME SCAN")
@@ -447,7 +447,7 @@ def main():
     ############################################ timing and done ########################################################
     endtime = time.time()
     print("Totally, it took", endtime - start_time,
-          f"s to find the terminators of a genome file that has {len(df_slide)} windows")
+          f"s to find the terminators of a genome file that has {len(write_df)} windows")
     print('Done')
 
 if __name__ == '__main__':
