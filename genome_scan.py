@@ -428,12 +428,12 @@ def main():
             for embedding in input_dim_dict.keys():
                 embedding_wo_csv = embedding.split('.csv')[0]
                 embed_filename = '_' + embedding_wo_csv + genome_filename +  '.csv'
-                df1 = pd.read_csv(os.path.join(output_dir, embed_filename))
+                df1 = pd.read_csv(os.path.join(temp_dir, embed_filename))
                 df_slide[f'probability_{embedding_wo_csv}'] = df1[f'probability_{embedding_wo_csv}']
                 del df1
             # write the results
             df_slide['probability_mean'] = df_slide[ [col for col in df_slide.columns if 'probability' in col] ].mean(axis=1)
-            mean_filename = genome_filename + '_mean.csv'
+            mean_filename = seq_id + '_mean.csv'
             df_slide.to_csv(os.path.join(output_dir, mean_filename), index=False)
             result_df = create_result_df(df_slide, OUTPUT_COLS, min_score)
             print("Result df")
