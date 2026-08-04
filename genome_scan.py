@@ -216,40 +216,20 @@ def read_csv_low(file, data_path, input_dim):
 
     return x, sample_names
 
-def create_result_df_old(df, output_cols, min_score):
-    # Remove _ for string splitting
-    df['SampleName'] = df['SampleName'].str.replace('NC_0', 'NC0')
-    # String splitting
-    print("Processing result df head")
-    print(df.head)
-    split_names = df['SampleName'].str.split('_', expand=True)
-    # len(split_names) with no _ in 'chrom" is 5. 
-    # 'chrom' is contained in indices 1:len(split_names)-4
-    print("Len split_names")
-    print(len(split_names))
+def create_result_df(df: pd.DataFrame, output_cols, min_score: float):
+    """
+    Create final result dataframe using the mean probability from the augmented df_slide.
+    Rename and filter columns by BED-file convention
+    Filter Values by min score.
 
-    # Create start and end indices
-    df['start'] =split_names.iloc[:, -3].astype(int)
-    df['end'] = split_names.iloc[:, -2].astype(int)
-    # Define Strand and sample name
-    df['strand'] = split_names.iloc[:, -1]
-    df['chrom'] = split_names.iloc[:, 1:-3].fillna('').astype(str).agg('_'.join, axis=1).str.rstrip('_')
-    # Add metadata
-    df['chrom'] = df['chrom'].str.replace('NC0', 'NC_0')
-    df['name'] = 'bactermfinder'
-    df['score'] = df['probability_mean']
-    # Sorting columns for a bedfile
-    df_result = df[output_cols]
-    # Filtering based on the threhsold
-    df_result = df_result[df_result['score']>min_score]
+    Arguments: 
+    df (df_slide): Input dataframe with result loci and mean probability
+    output_cols: Standard BED-file output columns
+    min_score: Minimum score for terminator retention
 
-    return df_result
-
-def create_result_df(df, output_cols, min_score):
-    # Remove _ for string splitting
-    # String splitting
-    print("Processing result df head")
-    print(df.head)
+    Outputs:
+    df_result: Result df with BED-file columns
+    """
 
     # Create start and end indices
     df['start'] = df['start'].astype(int)
@@ -436,14 +416,10 @@ def main():
             mean_filename = seq_id + '_mean.csv'
             df_slide.to_csv(os.path.join(output_dir, mean_filename), index=False)
             result_df = create_result_df(df_slide, OUTPUT_COLS, min_score)
-            print("Result df")
-            print(result_df)
             write_df = pd.concat([write_df, result_df])
 
+    # Write final result to output csv
     result_filename = genome_filename + '_result.csv'
-    print("RESULT FILENAME GENOME SCAN")
-    print(result_filename)
-    print(str(os.path.join(output_dir, result_filename)))
     write_df.to_csv(os.path.join(output_dir, result_filename), index=False)
 
     ############################################ timing and done ########################################################
